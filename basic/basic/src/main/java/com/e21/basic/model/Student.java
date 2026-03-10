@@ -1,4 +1,4 @@
-package com.e21.basic;
+package com.e21.basic.model;
 
 public class Student {
     private int id;

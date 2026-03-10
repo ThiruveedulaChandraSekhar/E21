@@ -1,21 +1,20 @@
-package com.e21.basic;
+package com.e21.basic.service;
 
-import org.springframework.web.bind.annotation.*;
+import com.e21.basic.model.Student;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
-public class StudentController {
+@Service
+public class StudentService {
     List<Student> list = new ArrayList<>();
 
-    @GetMapping("/student")
-    public List<Student> getAllStudents() {
+    public List<Student> getStudents() {
         return list;
     }
 
-    @GetMapping("/student/{id}")
-    public Student getStudent(@PathVariable int id) {
+    public Student getStudentById(int id) {
         for(Student i : list) {
             if(i.getId() == id)
                 return i;
@@ -23,11 +22,9 @@ public class StudentController {
         return null;
     }
 
-    @PostMapping("/student")
-    public String addStudent(@RequestBody Student student) {
+    public String addStudent(Student student) {
         student.setId(list.size() + 1);
         list.add(student);
         return "Student added successfully";
     }
-
 }
