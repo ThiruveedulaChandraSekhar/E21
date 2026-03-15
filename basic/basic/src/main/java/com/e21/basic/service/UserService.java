@@ -1,5 +1,8 @@
 package com.e21.basic.service;
 
+import com.e21.basic.exception.PasswordIncorrectException;
+import com.e21.basic.exception.UserNotFoundException;
+import com.e21.basic.exception.UsernameAlreadyExistsException;
 import com.e21.basic.model.User;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +18,7 @@ public class UserService {
         String username = user.getUsername();
         for(User i : list) {
             if(username.equals(i.getUsername()))
-                return "Username already exists";
+                throw new UsernameAlreadyExistsException(username);
         }
         list.add(user);
         return "Signup successful";
@@ -23,14 +26,19 @@ public class UserService {
 
     public String login(User user) {
         String username = user.getUsername();
+        boolean isPresent = false;
+        User stored = null;
         for(User i : list) {
-            if(username.equals(i.getUsername())) {
-                if(user.getPassword().equals(i.getPassword()))
-                    return "Login successful";
-                else
-                    return "Wrong password";
+            if(i.getUsername().equals(username)) {
+                isPresent = true;
+                stored = i;
+                break;
             }
         }
-        return "Username: " + username + "doesn't exists";
+        if(!isPresent)
+            throw new UserNotFoundException(username);
+        if(!user.getPassword().equals(stored.getPassword()))
+            throw new PasswordIncorrectException();
+        return "Login successful";
     }
 }
